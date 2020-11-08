@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  statistics_api:
+    container_name: statistics_api
+    build:
+      context: .
+    ports:
+      - 8000:8001
+    volumes:
+      - .:/usr/src/app
+    env_file: .env
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    env_file: .env
+    volumes:
+      - ./.data/mongodbdata:/data/db
+    command: mongod --auth
+    ports:
+      - 27018:27017
