@@ -10,6 +10,7 @@ uvicorn = "^0.12.2"
 fastapi = "^0.61.2"
 motor = "^2.3.0"
 environs = "^9.2.0"
+pyhumps = "^1.6.1"
 
 [tool.poetry.dev-dependencies]
 
