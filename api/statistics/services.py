@@ -13,16 +13,16 @@ async def create_or_update_option(conn: AsyncIOMotorClient,
     increment_data = {
         EventType.SELECTED.name: {'selected_times': 1},
         EventType.WON.name: {'won_times': 1},
+        EventType.TOOK_PART.name: {'took_part_times': 1},
+        EventType.TOOK_PART_IN_POLL.name: {'took_part_in_poll_times': 1},
     }
-    update_data = increment_data[option_data.event_type.value]
-    update_data.update({'took_part_times': 1})
     if option:
         option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].update_one(
-            data, {'$inc': update_data}
+            data, {'$inc': increment_data[option_data.event_type.value]}
         )
     else:
         option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(
-            {**data, **update_data}
+            {**data, **increment_data[option_data.event_type.value]}
         )
     return option
 

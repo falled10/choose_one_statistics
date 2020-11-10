@@ -6,6 +6,8 @@ from core.schemas import CamelModel
 class EventType(Enum):
     WON = 'WON'
     SELECTED = 'SELECTED'
+    TOOK_PART = 'TOOK_PART'
+    TOOK_PART_IN_POLL = 'TOOK_PART_IN_POLL'
 
 
 class CreateUpdateOptionSchema(CamelModel):
