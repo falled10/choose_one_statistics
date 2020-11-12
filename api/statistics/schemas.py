@@ -20,14 +20,3 @@ class CalculatedOptionSchema(CamelModel):
     option_id: int
     choose_percentage: int
     win_percentage: int
-
-
-class ResponseOptionSchema(CamelModel):
-    poll_id: int
-    option_id: int
-    selected_times: int
-    won_times: int
-    took_part_times: int
-
-    class Config:
-        orm_mode = True
