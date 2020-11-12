@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from api.statistics.schemas import CreateUpdateOptionSchema, EventType, CalculatedOptionSchema
-from api.statistics.models import COLLECTION_NAME
+from api.statistics.models import COLLECTION_NAME, OptionModel
 from api.statistics.utils import get_percentage
 from core.settings import MONGO_INITDB_DATABASE
 
@@ -21,10 +21,11 @@ async def create_or_update_option(conn: AsyncIOMotorClient,
             data, {'$inc': increment_data[option_data.event_type.value]}
         )
     else:
+        data = OptionModel(**data)
         option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(
-            {**data, **increment_data[option_data.event_type.value]}
+            {**data.dict(), **increment_data[option_data.event_type.value]}
         )
-    return option
+    return await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one({'_id': option.inserted_id})
 
 
 async def get_calculated_options(poll_id: int, conn: AsyncIOMotorClient,

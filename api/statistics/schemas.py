@@ -1,9 +1,11 @@
 from enum import Enum
 
+from pydantic import validator
+
 from core.schemas import CamelModel
 
 
-class EventType(Enum):
+class EventType(str, Enum):
     WON = 'WON'
     SELECTED = 'SELECTED'
     TOOK_PART = 'TOOK_PART'

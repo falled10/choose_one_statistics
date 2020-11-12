@@ -15,7 +15,7 @@ async def get_database() -> AsyncIOMotorClient:
 
 
 async def connect_to_mongo():
-    db.client = AsyncIOMotorClient(MONGO_URL, maxPollSize=10, minPollSize=10)
+    db.client = AsyncIOMotorClient(MONGO_URL, maxPoolSize=10, minPoolSize=10)
 
 
 async def close_mongo_connection():
