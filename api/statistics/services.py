@@ -17,15 +17,13 @@ async def create_or_update_option(conn: AsyncIOMotorClient,
         EventType.TOOK_PART_IN_POLL.value: {'took_part_in_poll_times': 1},
     }
     if option:
-        option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].update_one(
+        await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].update_one(
             data, {'$inc': increment_data[option_data.event_type.value]}
         )
-    else:
-        data = OptionModel(**data)
-        option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(
-            {**data.dict(), **increment_data[option_data.event_type.value]}
-        )
-    return await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one({'_id': option.inserted_id})
+    data = OptionModel(**data)
+    await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(
+        {**data.dict(), **increment_data[option_data.event_type.value]}
+    )
 
 
 async def get_calculated_options(poll_id: int, conn: AsyncIOMotorClient,

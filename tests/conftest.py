@@ -34,7 +34,8 @@ async def option(conn):
         'took_part_poll_times': 1,
         'won_times': 1
     }
-    return await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(data)
+    option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(data)
+    return await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one({'_id': option.inserted_id})
 
 
 @pytest.fixture()
