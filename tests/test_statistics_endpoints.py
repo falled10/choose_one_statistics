@@ -106,3 +106,20 @@ def test_get_statistics_for_options(client, option):
     assert resp.json()[0]['optionId'] == option['option_id']
     assert resp.json()[0]['selectedPercentage'] == 66
     assert resp.json()[1]['selectedPercentage'] == 0
+
+
+@pytest.mark.asyncio
+def test_make_option_inactive(client, option, conn, event_loop):
+    resp = client.delete(f'api/statistics/{option["option_id"]}')
+    assert resp.status_code == 204
+    update_option = event_loop.run_until_complete(conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one(
+        {'option_id': option["option_id"]}))
+    assert not update_option['is_active']
+
+
+@pytest.mark.asyncio
+def test_if_option_inactive_it_does_not_show_in_statistics(client, option):
+    client.delete(f'api/statistics/{option["option_id"]}')
+    resp = client.get(f'api/statistics/{option["poll_id"]}')
+    assert resp.status_code == 200
+    assert len(resp.json()) == 0

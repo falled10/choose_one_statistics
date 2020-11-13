@@ -41,4 +41,4 @@ async def get_calculated_options(poll_id: int, conn: AsyncIOMotorClient):
 
 async def make_option_inactive(option_id: int, conn: AsyncIOMotorClient):
     await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].update_one({'option_id': option_id},
-                                                                  {'is_active': False})
+                                                                  {'$set': {'is_active': False}})
