@@ -8,6 +8,7 @@ class OptionModel(CamelModel):
     selected_times: int = 0
     took_part_in_poll_times: int = 0
     won_times: int = 0
+    is_active: bool = True
 
 
 COLLECTION_NAME = 'options_collection'

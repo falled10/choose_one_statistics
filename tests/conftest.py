@@ -2,7 +2,7 @@ import pytest
 
 from fastapi.testclient import TestClient
 
-from api.statistics.models import COLLECTION_NAME
+from api.statistics.models import COLLECTION_NAME, OptionModel
 from core.settings import MONGO_INITDB_DATABASE
 from core.database import get_database, connect_to_mongo, close_mongo_connection
 from main import app
@@ -31,10 +31,10 @@ async def option(conn):
         'poll_id': 1,
         'took_part_times': 2,
         'selected_times': 1,
-        'took_part_poll_times': 1,
+        'took_part_in_poll_times': 1,
         'won_times': 1
     }
-    option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(data)
+    option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].insert_one(OptionModel(**data).dict())
     return await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one({'_id': option.inserted_id})
 
 

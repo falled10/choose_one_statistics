@@ -73,3 +73,36 @@ def test_update_and_create_options(client, conn, option, event_loop):
     created_option = event_loop.run_until_complete(conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one(
         {'option_id': option_id_for_create}))
     assert created_option['took_part_times'] == 1
+
+
+@pytest.mark.asyncio
+def test_get_statistics_for_options(client, option):
+    option_id_for_create = 2
+    data = [
+        {
+            'option_id': option_id_for_create,
+            'poll_id': option['poll_id'],
+            'event_type': "TOOK_PART"
+        },
+        {
+            'option_id': option['option_id'],
+            'poll_id': option['poll_id'],
+            'event_type': 'SELECTED'
+        },
+        {
+            'option_id': option['option_id'],
+            'poll_id': option['poll_id'],
+            'event_type': 'TOOK_PART'
+        },
+        {
+            'option_id': option_id_for_create,
+            'poll_id': option['poll_id'],
+            'event_type': 'TOOK_PART_IN_POLL'
+        }
+    ]
+    client.post('api/statistics', json=data)
+    resp = client.get(f'api/statistics/{option["poll_id"]}')
+    assert resp.status_code == 200
+    assert resp.json()[0]['optionId'] == option['option_id']
+    assert resp.json()[0]['selectedPercentage'] == 66
+    assert resp.json()[1]['selectedPercentage'] == 0

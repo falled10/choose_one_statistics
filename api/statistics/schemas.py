@@ -1,6 +1,5 @@
 from enum import Enum
-
-from pydantic import validator
+from typing import List
 
 from core.schemas import CamelModel
 
@@ -20,5 +19,9 @@ class CreateUpdateOptionSchema(CamelModel):
 
 class CalculatedOptionSchema(CamelModel):
     option_id: int
-    choose_percentage: int
+    selected_percentage: int
     win_percentage: int
+
+
+class RequestStatisticsSchema(CamelModel):
+    options_ids: List[int]
