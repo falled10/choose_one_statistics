@@ -25,3 +25,7 @@ class CalculatedOptionSchema(CamelModel):
 
 class RequestStatisticsSchema(CamelModel):
     options_ids: List[int]
+
+
+class RequestOptionsSchema(CamelModel):
+    data: List[CreateUpdateOptionSchema]

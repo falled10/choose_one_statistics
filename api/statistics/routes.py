@@ -5,7 +5,7 @@ from fastapi import Depends, status
 from fastapi.responses import Response
 from fastapi.routing import APIRouter
 
-from api.statistics.schemas import CreateUpdateOptionSchema, CalculatedOptionSchema, RequestStatisticsSchema
+from api.statistics.schemas import RequestOptionsSchema, CalculatedOptionSchema, RequestStatisticsSchema
 from api.statistics.services import create_or_update_option, get_calculated_options, make_option_inactive
 from core.database import get_database
 
@@ -13,12 +13,12 @@ router = APIRouter()
 
 
 @router.post('', status_code=status.HTTP_204_NO_CONTENT)
-async def create_or_update_options_route(options: List[CreateUpdateOptionSchema],
+async def create_or_update_options_route(options: RequestOptionsSchema,
                                          conn: AsyncIOMotorClient = Depends(get_database)):
     """Creates new or updates existed one option
     checking by `option_id` and `poll_id`
     """
-    for option in options:
+    for option in options.data:
         await create_or_update_option(conn, option)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

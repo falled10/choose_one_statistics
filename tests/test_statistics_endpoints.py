@@ -11,7 +11,7 @@ def test_create_new_option(client, conn, event_loop):
         'poll_id': 1,
         'event_type': "TOOK_PART"
     }
-    resp = client.post('api/statistics', json=[data])
+    resp = client.post('api/statistics', json={'data': data})
     assert resp.status_code == 204
     new_option = event_loop.run_until_complete(conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one(
         {'option_id': data['option_id']}))
@@ -25,7 +25,7 @@ def test_create_new_option_with_wrong_event_type(client):
         'poll_id': 1,
         'event_type': "SOMETHING ELSE"
     }
-    resp = client.post('api/statistics', json=[data])
+    resp = client.post('api/statistics', json={'data': data})
     assert resp.status_code == 400
 
 
@@ -37,7 +37,7 @@ def test_update_existed_option(client, conn, option, event_loop):
         'event_type': 'SELECTED'
     }
     old_win_count = option['selected_times']
-    resp = client.post('api/statistics', json=[data])
+    resp = client.post('api/statistics', json={'data': data})
     assert resp.status_code == 204
     new_option = event_loop.run_until_complete(conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one(
         {'option_id': data['option_id']}))
@@ -64,7 +64,7 @@ def test_update_and_create_options(client, conn, option, event_loop):
             'event_type': 'TOOK_PART'
         }
     ]
-    resp = client.post('api/statistics', json=data)
+    resp = client.post('api/statistics', json={'data': data})
     assert resp.status_code == 204
     new_option = event_loop.run_until_complete(conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one(
         {'option_id': option['option_id']}))
@@ -100,7 +100,7 @@ def test_get_statistics_for_options(client, option):
             'event_type': 'TOOK_PART_IN_POLL'
         }
     ]
-    client.post('api/statistics', json=data)
+    client.post('api/statistics', json={'data': data})
     resp = client.get(f'api/statistics/{option["poll_id"]}')
     assert resp.status_code == 200
     assert resp.json()[0]['optionId'] == option['option_id']
