@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.2.1 - 18.11.2020
+
+### Added
+
+* Try except for zero devision error in percentage util
+
 ## v0.2.0 - 13.11.2020
 
 ### Added
