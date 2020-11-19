@@ -21,3 +21,16 @@ services:
     command: mongod --auth
     ports:
       - 27018:27017
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+    env_file:
+      - .env
+    volumes:
+      - ./.conf/nginx:/etc/nginx/conf.d
+      - ./assets:/app/assets
+      - ./media:/app/media
+    depends_on:
+      - api
