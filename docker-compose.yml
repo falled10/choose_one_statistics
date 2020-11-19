@@ -33,4 +33,4 @@ services:
       - ./assets:/app/assets
       - ./media:/app/media
     depends_on:
-      - api
+      - statistics_api
