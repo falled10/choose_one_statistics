@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/bin/sh
 
-poetry run uvicorn --host 0.0.0.0 --port 8001 main:app --reload
+poetry run gunicorn main:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:80 --workers=4 --log-level=info
 
 exec "$@"
