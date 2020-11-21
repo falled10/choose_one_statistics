@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.3.0 - 21.11.2020
+
+### Changed
+
+* Endpoint for create/update option, now it returns statistics for options
+* Endpoint for getting statistics for poll, now you should send ids of options
+
 ## v0.2.1 - 18.11.2020
 
 ### Added

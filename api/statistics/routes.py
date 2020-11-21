@@ -12,22 +12,25 @@ from core.database import get_database
 router = APIRouter()
 
 
-@router.post('', status_code=status.HTTP_204_NO_CONTENT)
+@router.post('', status_code=status.HTTP_200_OK, response_model=List[CalculatedOptionSchema])
 async def create_or_update_options_route(options: RequestOptionsSchema,
                                          conn: AsyncIOMotorClient = Depends(get_database)):
     """Creates new or updates existed one option
     checking by `option_id` and `poll_id`
     """
+    options_ids = []
     for option in options.data:
         await create_or_update_option(conn, option)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+        options_ids.append(option.option_id)
+    return await get_calculated_options(options_ids, conn)
 
 
-@router.get('/{poll_id}', status_code=status.HTTP_200_OK, response_model=List[CalculatedOptionSchema])
-async def get_statistics_for_option_ids(poll_id: int, conn: AsyncIOMotorClient = Depends(get_database)):
+@router.post('/options', status_code=status.HTTP_200_OK, response_model=List[CalculatedOptionSchema])
+async def get_statistics_for_option_ids(options: RequestStatisticsSchema,
+                                        conn: AsyncIOMotorClient = Depends(get_database)):
     """Returns statistic for options selected by `options_ids`
     """
-    return await get_calculated_options(poll_id, conn)
+    return await get_calculated_options(options.options_ids, conn)
 
 
 @router.delete("/{option_id}", status_code=status.HTTP_204_NO_CONTENT)
