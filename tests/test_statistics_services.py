@@ -3,6 +3,7 @@ import pytest
 from api.statistics.services import create_or_update_option
 from api.statistics.schemas import CreateUpdateOptionSchema
 from api.statistics.models import COLLECTION_NAME
+from api.statistics.utils import get_percentage
 from core.settings import MONGO_INITDB_DATABASE
 
 
@@ -36,3 +37,18 @@ async def test_update_existed_option(conn, option):
     new_option = await conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find_one({'option_id': data['option_id']})
     assert new_option['won_times'] == old_win_count + 1
     assert new_option['_id'] == option['_id']
+
+
+def test_get_percentage():
+    result = get_percentage(100, 50)
+    assert result == 50
+
+
+def test_get_percentage_from_30():
+    result = get_percentage(100, 30)
+    assert result == 30
+
+
+def test_get_percentage_from_0():
+    result = get_percentage(0, 30)
+    assert result == 0

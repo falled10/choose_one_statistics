@@ -1,3 +1,5 @@
+from typing import List
+
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from api.statistics.schemas import CreateUpdateOptionSchema, EventType, CalculatedOptionSchema
@@ -27,9 +29,10 @@ async def create_or_update_option(conn: AsyncIOMotorClient,
         )
 
 
-async def get_calculated_options(poll_id: int, conn: AsyncIOMotorClient):
-    options = conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find({'poll_id': poll_id, 'is_active': True})
-    options = await options.to_list(length=256)
+async def get_calculated_options(options: List[int], conn: AsyncIOMotorClient):
+    options = conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find({'is_active': True,
+                                                                 'option_id': {'$in': options}})
+    options = await options.to_list(length=512)
     result = [CalculatedOptionSchema(option_id=option['option_id'],
                                      win_percentage=get_percentage(option['took_part_in_poll_times'],
                                                                    option['won_times']),
