@@ -29,8 +29,8 @@ async def create_or_update_option(conn: AsyncIOMotorClient,
         )
 
 
-async def get_calculated_options(options: List[int], poll_id: int, conn: AsyncIOMotorClient):
-    options = conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find({'poll_id': poll_id, 'is_active': True,
+async def get_calculated_options(options: List[int], conn: AsyncIOMotorClient):
+    options = conn[MONGO_INITDB_DATABASE][COLLECTION_NAME].find({'is_active': True,
                                                                  'option_id': {'$in': options}})
     options = await options.to_list(length=512)
     result = [CalculatedOptionSchema(option_id=option['option_id'],
